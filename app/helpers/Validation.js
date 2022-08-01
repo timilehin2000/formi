@@ -48,6 +48,25 @@ class Validations {
 
         next();
     }
+
+    static validateNewEventPayload(req, res, next) {
+        const schema = joi.object({
+            name: joi.string().required(),
+            description: joi.string().required(),
+            artist: joi.string().required(),
+            location: joi.string().required(),
+            date: joi.date().required(),
+            type: joi.string().valid("EDM", "Techno", "Hip-Hop").required(),
+        });
+
+        const { error } = schema.validate(req.body, { allowUnknown: true });
+
+        if (error) {
+            return handleValidationError(error, res);
+        }
+
+        next();
+    }
 }
 
 module.exports = Validations;

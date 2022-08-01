@@ -10,6 +10,8 @@ const AuthRoutes = require("./app/routes/AuthRoutes");
 
 const UserRoutes = require("./app/routes/UserRoutes");
 
+const EventRoutes = require("./app/routes/EventRoutes");
+
 const app = express();
 
 //app middleware
@@ -28,6 +30,7 @@ app.use((req, res, next) => {
 //routes
 app.use("/api/v1", AuthRoutes);
 app.use("/api/v1", UserRoutes);
+app.use("/api/v1", EventRoutes);
 
 // 404 Error Handler
 app.all("*", (req, res) => {

@@ -1,4 +1,4 @@
-const { findEventById } = require("../helpers/DBquery");
+const { findEventById, findAllSavedEvents } = require("../helpers/DBquery");
 
 const {
     sendErrorResponse,
@@ -14,6 +14,7 @@ class UserContoller {
         const { eventId } = req.body;
 
         const findEvent = await findEventById(eventId);
+
         if (!findEvent) {
             return sendErrorResponse(res, "No event with found", {}, 404);
         }
@@ -39,6 +40,23 @@ class UserContoller {
                 {},
                 500
             );
+        }
+    }
+
+    static async fetchAllUserSavedEvents(req, res) {
+        const { _id } = req.user;
+
+        try {
+            const fetchEvents = await findAllSavedEvents({ userId: _id });
+
+            return sendSuccessResponse(
+                res,
+                "Successfully fetched all events",
+                fetchEvents,
+                200
+            );
+        } catch (err) {
+            return sendErrorResponse(res, "Sorry, an error occured", {}, 500);
         }
     }
 }

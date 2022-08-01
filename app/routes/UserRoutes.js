@@ -1,17 +1,21 @@
 const router = require("express").Router();
 
-const { saveEvent } = require("../controllers/UserController");
+const {
+    saveEvent,
+    fetchAllUserSavedEvents,
+} = require("../controllers/UserController");
 
 const { validateAddSavedEventPayload } = require("../helpers/Validation");
 
 const { authTokenRequired } = require("../middleware/AuthPermission");
 
 router.post(
-    "/events/add",
+    "/events/",
     authTokenRequired,
     validateAddSavedEventPayload,
     saveEvent
 );
-// router.post("/login", validateLoginPayload, login);
+
+router.get("/events", authTokenRequired, fetchAllUserSavedEvents);
 
 module.exports = router;
