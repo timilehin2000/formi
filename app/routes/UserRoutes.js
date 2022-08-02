@@ -10,7 +10,7 @@ const {
 
 const { validateAddSavedEventPayload } = require("../helpers/Validation");
 
-const { authTokenRequired } = require("../middleware/AuthPermission");
+const { authTokenRequired, onlyUser } = require("../middleware/AuthPermission");
 
 router.post(
     "/user/events/",
@@ -19,14 +19,30 @@ router.post(
     saveEvent
 );
 
-router.delete("/user/events", authTokenRequired, deleteAllSavedEvents);
+router.delete(
+    "/user/events",
+    authTokenRequired,
+    onlyUser,
+    deleteAllSavedEvents
+);
 
-router.get("/user/events", authTokenRequired, fetchAllUserSavedEvents);
+router.get(
+    "/user/events",
+    authTokenRequired,
+    onlyUser,
+    fetchAllUserSavedEvents
+);
 
-router.get("/user/events/:eventId", authTokenRequired, fetchSingleSavedEvent);
+router.get(
+    "/user/events/:eventId",
+    authTokenRequired,
+    onlyUser,
+    fetchSingleSavedEvent
+);
 
 router.delete(
     "/user/events/:eventId",
+    onlyUser,
     authTokenRequired,
     deleteSingleSavedEvent
 );
