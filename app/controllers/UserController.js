@@ -67,7 +67,7 @@ class UserContoller {
 
             return sendSuccessResponse(
                 res,
-                "Successfully fetched all events",
+                "Successfully fetched all saved events",
                 { totalSavedEvents: fetchEvents.length, events: fetchEvents },
                 200
             );

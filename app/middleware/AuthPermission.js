@@ -52,6 +52,20 @@ class Auth {
             );
         }
     }
+
+    static onlyAdmin(req, res, next) {
+        console.log(req.user);
+        if (!req.user.isAdmin) {
+            return sendErrorResponse(
+                res,
+                "Access Denied. You are not an admin",
+                {},
+                403
+            );
+        }
+
+        return next();
+    }
 }
 
 module.exports = Auth;

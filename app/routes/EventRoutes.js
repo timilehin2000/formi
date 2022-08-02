@@ -6,8 +6,18 @@ const {
 } = require("../controllers/EventController");
 
 const { validateNewEventPayload } = require("../helpers/Validation");
+const {
+    onlyAdmin,
+    authTokenRequired,
+} = require("../middleware/AuthPermission");
 
-router.post("/events/add", validateNewEventPayload, addNewEvent);
+router.post(
+    "/events/add",
+    authTokenRequired,
+    onlyAdmin,
+    validateNewEventPayload,
+    addNewEvent
+);
 
 router.get("/events", fetchAllEvents);
 

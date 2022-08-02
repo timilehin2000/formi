@@ -43,15 +43,20 @@ class EventController {
 
         if (name) {
             filter.name = name;
-        } else if (description) {
+        }
+        if (description) {
             filter.description = description;
-        } else if (date) {
+        }
+        if (date) {
             filter.date = date;
-        } else if (artist) {
+        }
+        if (artist) {
             filter.artist = artist;
-        } else if (location) {
+        }
+        if (location) {
             filter.location = location;
-        } else if (type) {
+        }
+        if (type) {
             filter.type = type;
         }
 

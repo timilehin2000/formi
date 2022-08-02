@@ -36,7 +36,6 @@ class Validations {
 
     static validateAddSavedEventPayload(req, res, next) {
         const schema = joi.object({
-            userId: joi.string().required(),
             eventId: joi.string().required(),
         });
 
