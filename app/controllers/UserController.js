@@ -4,6 +4,8 @@ const {
     findEventById,
     findAllSavedEvents,
     findAllSavedEventsAndDelete,
+    findSingleSavedEvent,
+    findSavedEventAndDelete,
 } = require("../helpers/DBquery");
 
 const {
@@ -50,6 +52,8 @@ class UserContoller {
     static async fetchAllUserSavedEvents(req, res) {
         const { _id } = req.user;
 
+        const filter = { userId: _id };
+
         try {
             const fetchEvents = await findAllSavedEvents({ userId: _id });
             if (!fetchEvents.length) {
@@ -64,12 +68,41 @@ class UserContoller {
             return sendSuccessResponse(
                 res,
                 "Successfully fetched all events",
-                fetchEvents,
+                { totalSavedEvents: fetchEvents.length, events: fetchEvents },
                 200
             );
         } catch (err) {
             console.log(err);
             return sendErrorResponse(res, "Sorry, an error occured", {}, 500);
+        }
+    }
+
+    static async fetchSingleSavedEvent(req, res) {
+        const { _id } = req.user;
+
+        const { eventId } = req.params;
+
+        const filter = { userId: _id, _id: eventId };
+
+        try {
+            const fetchEvent = await findSingleSavedEvent(filter);
+            if (!fetchEvent) {
+                return sendErrorResponse(res, "No event found", {}, 404);
+            }
+
+            return sendSuccessResponse(
+                res,
+                "Successfully fetched saved event",
+                fetchEvent,
+                200
+            );
+        } catch (err) {
+            return sendErrorResponse(
+                res,
+                "Sorry, an unknown error occured",
+                {},
+                500
+            );
         }
     }
 
@@ -80,6 +113,14 @@ class UserContoller {
 
         try {
             const deleteEvents = await findAllSavedEventsAndDelete(filter);
+            if (!deleteEvents.deletedCount) {
+                return sendSuccessResponse(
+                    res,
+                    "You have no saved events yet",
+                    {},
+                    200
+                );
+            }
 
             return sendSuccessResponse(
                 res,
@@ -97,13 +138,18 @@ class UserContoller {
         }
     }
 
-    static deleteSingleSavedEvent(req, res) {
+    static async deleteSingleSavedEvent(req, res) {
         const { _id } = req.user;
 
-        const filter = { userId: _id };
+        const { eventId } = req.params;
+
+        const filter = { userId: _id, _id: eventId };
 
         try {
-            const deleteEvent = findSavedEventsByIdAndDelete(filter);
+            const deleteEvent = await findSavedEventAndDelete(filter);
+            if (!deleteEvent) {
+                return sendErrorResponse(res, "No event found", {}, 404);
+            }
 
             return sendSuccessResponse(
                 res,
@@ -112,6 +158,7 @@ class UserContoller {
                 200
             );
         } catch (err) {
+            console.log(err);
             return sendErrorResponse(
                 res,
                 "Sorry, an unknown error occured",

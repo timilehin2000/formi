@@ -4,6 +4,8 @@ const {
     saveEvent,
     fetchAllUserSavedEvents,
     deleteAllSavedEvents,
+    deleteSingleSavedEvent,
+    fetchSingleSavedEvent,
 } = require("../controllers/UserController");
 
 const { validateAddSavedEventPayload } = require("../helpers/Validation");
@@ -17,8 +19,16 @@ router.post(
     saveEvent
 );
 
-router.delete("/events/", authTokenRequired, deleteAllSavedEvents);
+router.delete("/saved-events/", authTokenRequired, deleteAllSavedEvents);
 
-router.get("/events", authTokenRequired, fetchAllUserSavedEvents);
+router.get("/saved-events", authTokenRequired, fetchAllUserSavedEvents);
+
+router.get("/saved-events/:eventId", authTokenRequired, fetchSingleSavedEvent);
+
+router.delete(
+    "/saved-events/:eventId",
+    authTokenRequired,
+    deleteSingleSavedEvent
+);
 
 module.exports = router;

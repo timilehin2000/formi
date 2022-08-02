@@ -25,8 +25,16 @@ class DBquery {
             });
     }
 
+    static findSingleSavedEvent(param) {
+        return SavedEvent.findOne(param);
+    }
+
     static async findAllSavedEventsAndDelete(param) {
         return await SavedEvent.deleteMany(param);
+    }
+
+    static async findSavedEventAndDelete(params) {
+        return await SavedEvent.findOneAndDelete(params);
     }
 }
 

@@ -35,6 +35,43 @@ class EventController {
             );
         }
     }
+
+    static async fetchAllEvents(req, res) {
+        const { name, description, date, artist, location, type } = req.query;
+
+        const filter = {};
+
+        if (name) {
+            filter.name = name;
+        } else if (description) {
+            filter.description = description;
+        } else if (date) {
+            filter.date = date;
+        } else if (artist) {
+            filter.artist = artist;
+        } else if (location) {
+            filter.location = location;
+        } else if (type) {
+            filter.type = type;
+        }
+
+        try {
+            const fetchEvents = await Event.find(filter);
+
+            if (!fetchEvents.length) {
+                return sendErrorResponse(res, "No events found", {}, 404);
+            }
+
+            return sendSuccessResponse(
+                res,
+                "Successfully fetched all events",
+                fetchEvents,
+                200
+            );
+        } catch (err) {
+            sendErrorResponse(res, "Sorry, an unknown error occured", {}, 500);
+        }
+    }
 }
 
 module.exports = EventController;
