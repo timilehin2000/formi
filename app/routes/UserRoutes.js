@@ -3,6 +3,7 @@ const router = require("express").Router();
 const {
     saveEvent,
     fetchAllUserSavedEvents,
+    deleteAllSavedEvents,
 } = require("../controllers/UserController");
 
 const { validateAddSavedEventPayload } = require("../helpers/Validation");
@@ -15,6 +16,8 @@ router.post(
     validateAddSavedEventPayload,
     saveEvent
 );
+
+router.delete("/events/", authTokenRequired, deleteAllSavedEvents);
 
 router.get("/events", authTokenRequired, fetchAllUserSavedEvents);
 

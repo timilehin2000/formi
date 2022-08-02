@@ -1,11 +1,15 @@
-const { findEventById, findAllSavedEvents } = require("../helpers/DBquery");
+const SavedEvent = require("../models/SavedEventModel");
+
+const {
+    findEventById,
+    findAllSavedEvents,
+    findAllSavedEventsAndDelete,
+} = require("../helpers/DBquery");
 
 const {
     sendErrorResponse,
     sendSuccessResponse,
 } = require("../helpers/Responses");
-
-const SavedEvent = require("../models/SavedEventModel");
 
 class UserContoller {
     static async saveEvent(req, res) {
@@ -48,6 +52,14 @@ class UserContoller {
 
         try {
             const fetchEvents = await findAllSavedEvents({ userId: _id });
+            if (!fetchEvents.length) {
+                return sendSuccessResponse(
+                    res,
+                    "You have no saved events yet",
+                    {},
+                    200
+                );
+            }
 
             return sendSuccessResponse(
                 res,
@@ -56,7 +68,56 @@ class UserContoller {
                 200
             );
         } catch (err) {
+            console.log(err);
             return sendErrorResponse(res, "Sorry, an error occured", {}, 500);
+        }
+    }
+
+    static async deleteAllSavedEvents(req, res) {
+        const { _id } = req.user;
+
+        const filter = { userId: _id };
+
+        try {
+            const deleteEvents = await findAllSavedEventsAndDelete(filter);
+
+            return sendSuccessResponse(
+                res,
+                "Successfully deleted all saved events",
+                {},
+                200
+            );
+        } catch (err) {
+            return sendErrorResponse(
+                res,
+                "Sorry, an unknown error occured",
+                {},
+                500
+            );
+        }
+    }
+
+    static deleteSingleSavedEvent(req, res) {
+        const { _id } = req.user;
+
+        const filter = { userId: _id };
+
+        try {
+            const deleteEvent = findSavedEventsByIdAndDelete(filter);
+
+            return sendSuccessResponse(
+                res,
+                "Successfully deleted saved event",
+                {},
+                200
+            );
+        } catch (err) {
+            return sendErrorResponse(
+                res,
+                "Sorry, an unknown error occured",
+                {},
+                500
+            );
         }
     }
 }

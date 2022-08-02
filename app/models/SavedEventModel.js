@@ -8,12 +8,12 @@ const SavedEventSchema = new Schema(
     {
         userId: {
             type: mongoose.Types.ObjectId,
-            ref: "user",
+            ref: "User",
         },
 
         eventId: {
             type: mongoose.Types.ObjectId,
-            ref: "event",
+            ref: "Event",
         },
     },
 

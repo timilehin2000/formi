@@ -1,8 +1,8 @@
+const User = require("../models/UserModel");
+
 const Event = require("../models/EventModel");
 
 const SavedEvent = require("../models/SavedEventModel");
-
-const User = require("../models/UserModel");
 
 class DBquery {
     static async findUserByEmail(email) {
@@ -14,7 +14,19 @@ class DBquery {
     }
 
     static async findAllSavedEvents(param) {
-        return await SavedEvent.find(param);
+        return await SavedEvent.find(param)
+            .populate({
+                path: "userId",
+                select: "name email",
+            })
+            .populate({
+                path: "eventId",
+                select: "name description date artist location type",
+            });
+    }
+
+    static async findAllSavedEventsAndDelete(param) {
+        return await SavedEvent.deleteMany(param);
     }
 }
 
